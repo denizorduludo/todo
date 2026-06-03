@@ -5,6 +5,8 @@ Saf HTML/CSS/JS ile yazıldı; veritabanı olarak **Supabase** kullanır.
 
 ## Özellikler
 
+- 🔐 E-posta + şifre ile **kayıt / giriş** (Supabase Auth) — e-posta doğrulamalı
+- 👤 Görevler **kullanıcıya özel** (RLS ile herkes yalnızca kendi görevlerini görür)
 - ✅ Görev ekleme / tamamlama / silme
 - 📅 Booking tarzı takvimden **başlangıç ve bitiş tarihi** seçme
 - 🕐 Başlangıç ve bitiş **saati** ekleme

@@ -30,63 +30,104 @@
   }
 
   .app { width: 100%; max-width: 560px; }
+  [hidden] { display: none !important; }
 
-  /* Başlık */
+  /* ===== Giriş / Kayıt ekranı ===== */
+  #auth-view { width: 100%; max-width: 400px; margin: 4vh auto 0; }
+  .auth-card { border: 2px solid var(--ink); background: var(--white); padding: 28px; }
+  .auth-card h1 { font-size: 2rem; font-weight: 800; letter-spacing: -1px; }
+  .auth-sub { color: var(--muted); font-size: .9rem; margin: 6px 0 20px; }
+
+  .auth-tabs { display: flex; gap: 8px; margin-bottom: 18px; }
+  .auth-tab {
+    flex: 1; padding: 10px; border: 2px solid var(--ink); background: var(--white);
+    color: var(--ink); font-weight: 700; font-size: .9rem; cursor: pointer;
+  }
+  .auth-tab:hover { background: var(--peach); }
+  .auth-tab.active { background: var(--lilac); }
+
+  .auth-form { display: flex; flex-direction: column; gap: 12px; }
+  .auth-form input {
+    padding: 13px 14px; border: 2px solid var(--ink); background: var(--white);
+    color: var(--ink); font-size: 1rem; outline: none; width: 100%;
+  }
+  .auth-form input:focus { background: var(--peach); }
+  .auth-form input::placeholder { color: #9a948a; }
+  .auth-form button.primary {
+    padding: 13px; border: 2px solid var(--ink); background: var(--lime);
+    color: var(--ink); font-weight: 800; font-size: 1rem; cursor: pointer;
+  }
+  .auth-form button.primary:hover { background: var(--orange); }
+  .link-btn {
+    background: none; border: none; color: var(--muted); cursor: pointer;
+    font-size: .85rem; font-weight: 600; text-decoration: underline; padding: 4px;
+  }
+  .link-btn:hover { color: var(--ink); }
+  .otp-info { font-size: .88rem; color: var(--ink); line-height: 1.5; }
+  #otp-code { letter-spacing: 6px; text-align: center; font-size: 1.2rem; font-weight: 700; }
+
+  .auth-msg { margin-top: 14px; font-size: .88rem; min-height: 1em; }
+  .auth-msg.error { color: var(--orange); font-weight: 700; }
+  .auth-msg.ok    { color: var(--muted); }
+
+  /* ===== Üst kullanıcı çubuğu ===== */
+  .userbar {
+    display: flex; justify-content: space-between; align-items: center;
+    border: 2px solid var(--ink); background: var(--white);
+    padding: 10px 14px; margin-bottom: 22px; font-size: .88rem;
+  }
+  .userbar .who { color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .userbar .who strong { color: var(--ink); }
+  #logout {
+    border: 2px solid var(--ink); background: var(--white); color: var(--ink);
+    cursor: pointer; font-weight: 700; font-size: .82rem; padding: 7px 12px; flex-shrink: 0;
+  }
+  #logout:hover { background: var(--orange); color: var(--white); }
+
+  /* ===== To-do ===== */
   header h1 { font-size: 2.6rem; font-weight: 800; letter-spacing: -1px; line-height: 1.05; }
   header p  { margin-top: 8px; color: var(--muted); font-size: .95rem; }
 
-  /* Giriş alanı */
   .add-row { display: flex; gap: 10px; margin: 28px 0 12px; }
   #task-input {
-    flex: 1; padding: 15px 16px;
-    border: 2px solid var(--ink); background: var(--white);
+    flex: 1; padding: 15px 16px; border: 2px solid var(--ink); background: var(--white);
     color: var(--ink); font-size: 1rem; outline: none;
   }
   #task-input::placeholder { color: #9a948a; }
   #task-input:focus { background: var(--peach); }
-
   #add-btn {
-    padding: 0 26px; border: 2px solid var(--ink);
-    background: var(--lime); color: var(--ink);
-    font-weight: 800; font-size: 1rem; cursor: pointer;
+    padding: 0 26px; border: 2px solid var(--ink); background: var(--lime);
+    color: var(--ink); font-weight: 800; font-size: 1rem; cursor: pointer;
   }
   #add-btn:hover { background: var(--orange); }
 
-  /* Tarih çubuğu */
   .date-bar { display: flex; gap: 10px; align-items: center; margin-bottom: 12px; flex-wrap: wrap; }
   #cal-toggle {
     padding: 9px 14px; border: 2px solid var(--ink); background: var(--white);
-    color: var(--ink); font-weight: 600; font-size: .9rem; cursor: pointer;
-    line-height: 1.4;
+    color: var(--ink); font-weight: 600; font-size: .9rem; cursor: pointer; line-height: 1.4;
   }
   #cal-toggle:hover { background: var(--peach); }
   #cal-toggle.on { background: var(--lilac); }
   .date-summary {
-    display: inline-flex; align-items: center;
-    padding: 9px 14px; border: 2px solid var(--ink);
-    background: var(--white); color: var(--ink);
-    font-size: .9rem; font-weight: 600; line-height: 1.4;
+    display: inline-flex; align-items: center; padding: 9px 14px; border: 2px solid var(--ink);
+    background: var(--white); color: var(--ink); font-size: .9rem; font-weight: 600; line-height: 1.4;
   }
   .date-summary.no-date { color: var(--muted); font-weight: 400; background: var(--cream); }
 
-  /* Takvim paneli */
   .cal { border: 2px solid var(--ink); background: var(--white); padding: 16px; margin-bottom: 20px; }
-  .cal[hidden] { display: none; }
   .cal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
   .cal-title { font-weight: 800; font-size: 1.05rem; text-transform: capitalize; }
   .cal-nav { display: flex; gap: 8px; }
   .cal-nav button {
-    width: 34px; height: 34px; border: 2px solid var(--ink);
-    background: var(--white); cursor: pointer; font-size: 1rem; line-height: 1;
+    width: 34px; height: 34px; border: 2px solid var(--ink); background: var(--white);
+    cursor: pointer; font-size: 1rem; line-height: 1;
   }
   .cal-nav button:hover { background: var(--peach); }
-
   .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
   .dow { text-align: center; font-size: .72rem; font-weight: 700; color: var(--muted); padding: 4px 0; }
   .day {
     aspect-ratio: 1 / 1; display: flex; align-items: center; justify-content: center;
-    border: 1px solid transparent; background: var(--cream); cursor: pointer;
-    font-size: .9rem; user-select: none;
+    border: 1px solid transparent; background: var(--cream); cursor: pointer; font-size: .9rem; user-select: none;
   }
   .day.blank { background: transparent; cursor: default; }
   .day:not(.blank):hover { border-color: var(--ink); }
@@ -94,7 +135,6 @@
   .day.in-range { background: var(--peach); }
   .day.edge { background: var(--orange); color: var(--ink); font-weight: 800; border-color: var(--ink); }
 
-  /* Saatler + aksiyonlar */
   .times { display: flex; gap: 14px; margin-top: 16px; flex-wrap: wrap; }
   .time-field { display: flex; flex-direction: column; gap: 4px; font-size: .8rem; color: var(--muted); }
   .time-field input {
@@ -103,16 +143,12 @@
   }
   .time-field input:focus { background: var(--peach); }
   .cal-actions { display: flex; gap: 10px; margin-top: 16px; }
-  .cal-actions button {
-    padding: 9px 16px; border: 2px solid var(--ink); cursor: pointer;
-    font-weight: 700; font-size: .88rem;
-  }
+  .cal-actions button { padding: 9px 16px; border: 2px solid var(--ink); cursor: pointer; font-weight: 700; font-size: .88rem; }
   #cal-clear { background: var(--white); color: var(--ink); }
   #cal-clear:hover { background: var(--lilac); }
   #cal-done  { background: var(--lime); color: var(--ink); }
   #cal-done:hover { background: var(--orange); }
 
-  /* Araç çubuğu: filtreler + sıralama */
   .toolbar { display: flex; gap: 10px; align-items: center; justify-content: space-between; margin-bottom: 22px; flex-wrap: wrap; }
   .filters { display: flex; gap: 10px; }
   .filter {
@@ -121,17 +157,14 @@
   }
   .filter:hover { background: var(--peach); }
   .filter.active { background: var(--lilac); }
-
   .sort-wrap { display: flex; align-items: center; gap: 8px; font-size: .82rem; color: var(--muted); }
   #sort {
     border: 2px solid var(--ink); background: var(--white); color: var(--ink);
     padding: 8px 10px; font-size: .85rem; font-weight: 600; cursor: pointer;
   }
 
-  /* Liste */
   ul#list { list-style: none; display: flex; flex-direction: column; gap: 12px; }
   .item { display: flex; align-items: flex-start; gap: 14px; padding: 16px; background: var(--white); border: 2px solid var(--ink); }
-
   .check {
     appearance: none; width: 24px; height: 24px; flex-shrink: 0; margin-top: 1px;
     border: 2px solid var(--ink); background: var(--white); cursor: pointer; position: relative;
@@ -139,10 +172,9 @@
   .check:hover { background: var(--peach); }
   .check:checked { background: var(--lime); }
   .check:checked::after {
-    content: ""; position: absolute; left: 7px; top: 2px;
-    width: 6px; height: 12px; border: solid var(--ink); border-width: 0 3px 3px 0; transform: rotate(45deg);
+    content: ""; position: absolute; left: 7px; top: 2px; width: 6px; height: 12px;
+    border: solid var(--ink); border-width: 0 3px 3px 0; transform: rotate(45deg);
   }
-
   .body { flex: 1; min-width: 0; }
   .text { font-size: 1.02rem; word-break: break-word; }
   .meta {
@@ -152,21 +184,18 @@
   }
   .item.done { background: var(--cream); }
   .item.done .text { color: #9a948a; text-decoration: line-through; }
-
   .del {
     width: 30px; height: 30px; flex-shrink: 0; border: 2px solid var(--ink);
     background: var(--white); color: var(--ink); font-size: 1.1rem; line-height: 1; cursor: pointer;
   }
   .del:hover { background: var(--orange); color: var(--white); }
 
-  /* Alt bilgi */
   .footer { margin-top: 22px; display: flex; justify-content: space-between; align-items: center; font-size: .85rem; color: var(--muted); }
   #clear-done {
     border: 2px solid var(--ink); background: var(--white); color: var(--ink);
     cursor: pointer; font-size: .85rem; font-weight: 600; padding: 8px 14px;
   }
   #clear-done:hover { background: var(--lilac); }
-
   .empty {
     text-align: center; color: var(--muted); padding: 44px 0; font-size: .95rem;
     background: var(--white); border: 2px dashed var(--ink);
@@ -175,7 +204,45 @@
 </style>
 </head>
 <body>
-  <div class="app">
+  <!-- ===== GİRİŞ / KAYIT ===== -->
+  <div id="auth-view" hidden>
+    <div class="auth-card">
+      <h1>Yapılacaklar</h1>
+      <p class="auth-sub">Görevlerin sana özel. Giriş yap veya kayıt ol.</p>
+
+      <div class="auth-tabs">
+        <button class="auth-tab active" data-mode="login" type="button">Giriş yap</button>
+        <button class="auth-tab" data-mode="signup" type="button">Kayıt ol</button>
+      </div>
+
+      <form id="cred-form" class="auth-form">
+        <input id="email" type="email" placeholder="E-posta" autocomplete="email" required />
+        <input id="password" type="password" placeholder="Şifre (en az 6 karakter)" autocomplete="current-password" minlength="6" required />
+        <button id="cred-submit" class="primary" type="submit">Giriş yap</button>
+      </form>
+
+      <form id="otp-form" class="auth-form" hidden>
+        <p class="otp-info">
+          <strong id="otp-email"></strong> adresine doğrulama gönderildi.<br>
+          E-postadaki kodu aşağıya gir ya da e-postadaki bağlantıya tıkla.
+        </p>
+        <input id="otp-code" inputmode="numeric" autocomplete="one-time-code" placeholder="Doğrulama kodu" />
+        <button id="otp-submit" class="primary" type="submit">Doğrula ve giriş yap</button>
+        <button id="otp-resend" class="link-btn" type="button">Tekrar gönder</button>
+        <button id="otp-back" class="link-btn" type="button">← Geri dön</button>
+      </form>
+
+      <div id="auth-msg" class="auth-msg"></div>
+    </div>
+  </div>
+
+  <!-- ===== UYGULAMA ===== -->
+  <div id="app-view" class="app" hidden>
+    <div class="userbar">
+      <span class="who">Giriş yapıldı: <strong id="user-email"></strong></span>
+      <button id="logout" type="button">Çıkış</button>
+    </div>
+
     <header>
       <h1>Yapılacaklar</h1>
       <p>Sade ve ferah. Bugün ne yapıyoruz?</p>
@@ -200,16 +267,10 @@
         </div>
       </div>
       <div class="cal-grid" id="cal-grid"></div>
-
       <div class="times">
-        <label class="time-field">Başlangıç saati
-          <input type="time" id="start-time" />
-        </label>
-        <label class="time-field">Bitiş saati
-          <input type="time" id="end-time" />
-        </label>
+        <label class="time-field">Başlangıç saati <input type="time" id="start-time" /></label>
+        <label class="time-field">Bitiş saati <input type="time" id="end-time" /></label>
       </div>
-
       <div class="cal-actions">
         <button type="button" id="cal-clear">Temizle</button>
         <button type="button" id="cal-done">Tamam</button>
@@ -247,9 +308,120 @@
   const SUPABASE_KEY = "sb_publishable_Y9UsjOku_ho3kOO9HhOnDw_TcrRd7lW";
   const db = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-  // --- DOM ---
+  // ===================== AUTH =====================
+  const authView  = document.getElementById("auth-view");
+  const appView   = document.getElementById("app-view");
+  const authTabs  = document.querySelectorAll(".auth-tab");
+  const credForm  = document.getElementById("cred-form");
+  const emailEl   = document.getElementById("email");
+  const pwEl      = document.getElementById("password");
+  const credSubmit= document.getElementById("cred-submit");
+  const otpForm   = document.getElementById("otp-form");
+  const otpCode   = document.getElementById("otp-code");
+  const otpEmail  = document.getElementById("otp-email");
+  const authMsg   = document.getElementById("auth-msg");
+  const userEmail = document.getElementById("user-email");
+  const logoutBtn = document.getElementById("logout");
+  const redirectTo = location.origin + location.pathname;
+
+  let mode = "login";
+  let pendingEmail = "";
+  let currentUser = null;
+
+  const tr = (m = "") => {
+    const s = m.toLowerCase();
+    if (s.includes("invalid login")) return "E-posta veya şifre hatalı.";
+    if (s.includes("already registered") || s.includes("already been registered")) return "Bu e-posta zaten kayıtlı. Giriş yapmayı dene.";
+    if (s.includes("email not confirmed")) return "E-posta henüz doğrulanmadı. Gelen kutunu kontrol et.";
+    if (s.includes("expired") || s.includes("invalid") && s.includes("token")) return "Kod geçersiz veya süresi dolmuş.";
+    if (s.includes("at least 6")) return "Şifre en az 6 karakter olmalı.";
+    if (s.includes("for security purposes")) return "Çok sık denedin, birkaç saniye sonra tekrar dene.";
+    if (s.includes("rate limit") || s.includes("email rate")) return "E-posta gönderim sınırına ulaşıldı, biraz sonra dene.";
+    return m;
+  };
+  const msg = (text, isError = false) => {
+    authMsg.textContent = text;
+    authMsg.className = "auth-msg" + (text ? (isError ? " error" : " ok") : "");
+  };
+
+  function setMode(m) {
+    mode = m;
+    authTabs.forEach(t => t.classList.toggle("active", t.dataset.mode === m));
+    credForm.hidden = false; otpForm.hidden = true;
+    credSubmit.textContent = m === "login" ? "Giriş yap" : "Kayıt ol";
+    pwEl.autocomplete = m === "login" ? "current-password" : "new-password";
+    msg("");
+  }
+  function showOtp(email) {
+    pendingEmail = email;
+    otpEmail.textContent = email;
+    credForm.hidden = true; otpForm.hidden = false;
+    otpCode.value = ""; otpCode.focus();
+  }
+
+  authTabs.forEach(t => t.addEventListener("click", () => setMode(t.dataset.mode)));
+
+  credForm.addEventListener("submit", async e => {
+    e.preventDefault();
+    const email = emailEl.value.trim(), password = pwEl.value;
+    credSubmit.disabled = true; msg("");
+    try {
+      if (mode === "login") {
+        const { error } = await db.auth.signInWithPassword({ email, password });
+        if (error) return msg(tr(error.message), true);
+      } else {
+        const { data, error } = await db.auth.signUp({
+          email, password, options: { emailRedirectTo: redirectTo }
+        });
+        if (error) return msg(tr(error.message), true);
+        if (data.session) return;             // onay kapalıysa direkt giriş
+        showOtp(email);
+        msg("Doğrulama gönderildi. E-postanı kontrol et.", false);
+      }
+    } finally { credSubmit.disabled = false; }
+  });
+
+  otpForm.addEventListener("submit", async e => {
+    e.preventDefault();
+    const token = otpCode.value.trim();
+    if (!token) return;
+    msg("");
+    let r = await db.auth.verifyOtp({ email: pendingEmail, token, type: "signup" });
+    if (r.error) r = await db.auth.verifyOtp({ email: pendingEmail, token, type: "email" });
+    if (r.error) return msg(tr(r.error.message), true);
+    // başarı → onAuthStateChange uygulamayı açar
+  });
+
+  document.getElementById("otp-resend").addEventListener("click", async () => {
+    msg("Tekrar gönderiliyor…");
+    const { error } = await db.auth.resend({ type: "signup", email: pendingEmail, options: { emailRedirectTo: redirectTo } });
+    msg(error ? tr(error.message) : "Yeni doğrulama gönderildi.", !!error);
+  });
+  document.getElementById("otp-back").addEventListener("click", () => setMode(mode));
+
+  logoutBtn.addEventListener("click", () => db.auth.signOut());
+
+  function showApp(user) {
+    currentUser = user;
+    authView.hidden = true; appView.hidden = false;
+    userEmail.textContent = user.email;
+    load();
+  }
+  function showAuth() {
+    currentUser = null; tasks = [];
+    appView.hidden = true; authView.hidden = false;
+    setMode("login");
+    emailEl.value = ""; pwEl.value = "";
+  }
+
+  db.auth.onAuthStateChange((_event, session) => {
+    if (session?.user) showApp(session.user);
+    else showAuth();
+  });
+
+  // ===================== TO-DO =====================
   const input    = document.getElementById("task-input");
-  const addBtn   = document.getElementById("add-btn");
+  const addBtn    = document.getElementById("add-btn");
   const list     = document.getElementById("list");
   const count    = document.getElementById("count");
   const clearBtn = document.getElementById("clear-done");
@@ -264,7 +436,6 @@
   const startTime = document.getElementById("start-time");
   const endTime   = document.getElementById("end-time");
 
-  // --- Durum ---
   let tasks  = [];
   let filter = "all";
   let sortMode = "created";
@@ -272,21 +443,17 @@
   const today = new Date(); today.setHours(0,0,0,0);
   let viewYear  = today.getFullYear();
   let viewMonth = today.getMonth();
-  let selStart = null;   // sadece tarih (Date)
-  let selEnd   = null;
+  let selStart = null, selEnd = null;
 
-  // --- Yardımcılar ---
   const dayKey = d => d.getFullYear() + "-" + d.getMonth() + "-" + d.getDate();
   const sameDay = (a, b) => a && b && dayKey(a) === dayKey(b);
-
   const fmtD = d => new Intl.DateTimeFormat("tr-TR", { day: "numeric", month: "short" }).format(d);
   const fmtT = d => new Intl.DateTimeFormat("tr-TR", { hour: "2-digit", minute: "2-digit" }).format(d);
   const hasTime = d => d.getHours() !== 0 || d.getMinutes() !== 0;
   const part = d => fmtD(d) + (hasTime(d) ? " " + fmtT(d) : "");
 
   function fmtRange(sIso, eIso) {
-    const s = sIso ? new Date(sIso) : null;
-    const e = eIso ? new Date(eIso) : null;
+    const s = sIso ? new Date(sIso) : null, e = eIso ? new Date(eIso) : null;
     if (!s && !e) return "";
     if (s && e) {
       if (sameDay(s, e)) {
@@ -297,246 +464,158 @@
     }
     return part(s || e);
   }
-
   function combine(dateOnly, timeStr) {
     let h = 0, m = 0;
     if (timeStr) { const p = timeStr.split(":"); h = +p[0] || 0; m = +p[1] || 0; }
     return new Date(dateOnly.getFullYear(), dateOnly.getMonth(), dateOnly.getDate(), h, m).toISOString();
   }
 
-  // --- Takvim ---
   function renderCal() {
     calTitle.textContent = new Intl.DateTimeFormat("tr-TR", { month: "long", year: "numeric" })
       .format(new Date(viewYear, viewMonth, 1));
-
     calGrid.innerHTML = "";
     ["Pzt","Sal","Çar","Per","Cum","Cmt","Paz"].forEach(d => {
-      const el = document.createElement("div");
-      el.className = "dow"; el.textContent = d;
-      calGrid.appendChild(el);
+      const el = document.createElement("div"); el.className = "dow"; el.textContent = d; calGrid.appendChild(el);
     });
-
     const first = new Date(viewYear, viewMonth, 1);
-    const lead = (first.getDay() + 6) % 7;            // Pazartesi = 0
+    const lead = (first.getDay() + 6) % 7;
     const days = new Date(viewYear, viewMonth + 1, 0).getDate();
-
-    for (let i = 0; i < lead; i++) {
-      const b = document.createElement("div");
-      b.className = "day blank";
-      calGrid.appendChild(b);
-    }
-
+    for (let i = 0; i < lead; i++) { const b = document.createElement("div"); b.className = "day blank"; calGrid.appendChild(b); }
     for (let d = 1; d <= days; d++) {
       const cur = new Date(viewYear, viewMonth, d);
-      const el = document.createElement("div");
-      el.className = "day";
-      el.textContent = d;
+      const el = document.createElement("div"); el.className = "day"; el.textContent = d;
       if (sameDay(cur, today)) el.classList.add("today");
-
       const isEdge = sameDay(cur, selStart) || sameDay(cur, selEnd);
       const inRange = selStart && selEnd && cur > selStart && cur < selEnd;
-      if (isEdge) el.classList.add("edge");
-      else if (inRange) el.classList.add("in-range");
-
+      if (isEdge) el.classList.add("edge"); else if (inRange) el.classList.add("in-range");
       el.addEventListener("click", () => pickDay(cur));
       calGrid.appendChild(el);
     }
   }
-
   function pickDay(day) {
-    if (!selStart || (selStart && selEnd)) {
-      selStart = day; selEnd = null;
-    } else {
-      if (day.getTime() < selStart.getTime()) selStart = day;
-      else if (day.getTime() === selStart.getTime()) { /* aynı gün: tek gün kalır */ }
-      else selEnd = day;
-    }
-    renderCal();
-    updateSummary();
+    if (!selStart || (selStart && selEnd)) { selStart = day; selEnd = null; }
+    else if (day.getTime() < selStart.getTime()) selStart = day;
+    else if (day.getTime() !== selStart.getTime()) selEnd = day;
+    renderCal(); updateSummary();
   }
-
   function updateSummary() {
-    if (!selStart) {
-      dateSummary.textContent = "Tarih seçilmedi";
-      dateSummary.classList.add("no-date");
-      return;
-    }
+    if (!selStart) { dateSummary.textContent = "Tarih seçilmedi"; dateSummary.classList.add("no-date"); return; }
     dateSummary.classList.remove("no-date");
     const sTxt = fmtD(selStart) + (startTime.value ? " " + startTime.value : "");
     if (selEnd) {
-      const eTxt = fmtD(selEnd) + (endTime.value ? " " + endTime.value : "");
-      dateSummary.textContent = sTxt + "  →  " + eTxt;
+      dateSummary.textContent = sTxt + "  →  " + fmtD(selEnd) + (endTime.value ? " " + endTime.value : "");
     } else {
-      const eT = endTime.value ? "  →  " + fmtD(selStart) + " " + endTime.value : "";
-      dateSummary.textContent = sTxt + eT;
+      dateSummary.textContent = sTxt + (endTime.value ? "  →  " + fmtD(selStart) + " " + endTime.value : "");
     }
   }
-
   function clearDates() {
-    selStart = null; selEnd = null;
-    startTime.value = ""; endTime.value = "";
+    selStart = null; selEnd = null; startTime.value = ""; endTime.value = "";
     renderCal(); updateSummary();
   }
 
-  // --- Veri ---
   async function load() {
     const { data, error } = await db.from("tasks").select("*");
-    if (error) { console.error(error); alert("Veriler yüklenemedi: " + error.message); return; }
-    tasks = data;
-    render();
+    if (error) { console.error(error); return; }
+    tasks = data; render();
   }
-
   function sortTasks(arr) {
     const a = [...arr];
-    if (sortMode === "created") {
-      a.sort((x, y) => new Date(y.inserted_at) - new Date(x.inserted_at));
-    } else if (sortMode === "alpha") {
-      a.sort((x, y) => x.text.localeCompare(y.text, "tr", { sensitivity: "base" }));
-    } else if (sortMode === "start") {
-      a.sort((x, y) => {
-        if (!x.start_at && !y.start_at) return 0;
-        if (!x.start_at) return 1;
-        if (!y.start_at) return -1;
-        return new Date(x.start_at) - new Date(y.start_at);
-      });
-    }
+    if (sortMode === "created") a.sort((x, y) => new Date(y.inserted_at) - new Date(x.inserted_at));
+    else if (sortMode === "alpha") a.sort((x, y) => x.text.localeCompare(y.text, "tr", { sensitivity: "base" }));
+    else if (sortMode === "start") a.sort((x, y) => {
+      if (!x.start_at && !y.start_at) return 0;
+      if (!x.start_at) return 1; if (!y.start_at) return -1;
+      return new Date(x.start_at) - new Date(y.start_at);
+    });
     return a;
   }
-
   function render() {
     list.innerHTML = "";
-
-    let shown = tasks.filter(t =>
-      filter === "all" ? true : filter === "active" ? !t.done : t.done
-    );
+    let shown = tasks.filter(t => filter === "all" ? true : filter === "active" ? !t.done : t.done);
     shown = sortTasks(shown);
-
     if (shown.length === 0) {
       list.innerHTML = `<li class="empty"><span>📋</span>${
         tasks.length === 0 ? "Henüz görev yok. İlkini ekle!" : "Bu filtrede görev yok."
       }</li>`;
     }
-
     shown.forEach(task => {
       const li = document.createElement("li");
       li.className = "item" + (task.done ? " done" : "");
-
       const cb = document.createElement("input");
       cb.type = "checkbox"; cb.className = "check"; cb.checked = task.done;
       cb.addEventListener("change", () => toggle(task.id));
-
-      const body = document.createElement("div");
-      body.className = "body";
-      const span = document.createElement("div");
-      span.className = "text";
-      span.textContent = task.text;
+      const body = document.createElement("div"); body.className = "body";
+      const span = document.createElement("div"); span.className = "text"; span.textContent = task.text;
       body.appendChild(span);
-
       const range = fmtRange(task.start_at, task.end_at);
-      if (range) {
-        const meta = document.createElement("span");
-        meta.className = "meta";
-        meta.textContent = "📅 " + range;
-        body.appendChild(meta);
-      }
-
+      if (range) { const meta = document.createElement("span"); meta.className = "meta"; meta.textContent = "📅 " + range; body.appendChild(meta); }
       const del = document.createElement("button");
       del.className = "del"; del.innerHTML = "&times;"; del.title = "Sil";
       del.addEventListener("click", () => remove(task.id));
-
-      li.append(cb, body, del);
-      list.appendChild(li);
+      li.append(cb, body, del); list.appendChild(li);
     });
-
     const left = tasks.filter(t => !t.done).length;
     count.textContent = `${left} görev kaldı · ${tasks.length} toplam`;
   }
 
   async function add() {
     const text = input.value.trim();
-    if (!text) { input.focus(); return; }
-
+    if (!text || !currentUser) { input.focus(); return; }
     let start_at = null, end_at = null;
     if (selStart) {
       start_at = combine(selStart, startTime.value);
       const endDay = selEnd || (endTime.value ? selStart : null);
       if (endDay) end_at = combine(endDay, endTime.value);
     }
-
-    const row = { text };
+    const row = { text, user_id: currentUser.id };
     if (start_at) row.start_at = start_at;
     if (end_at)   row.end_at = end_at;
-
     input.value = "";
     const { data, error } = await db.from("tasks").insert(row).select().single();
     if (error) { console.error(error); alert("Eklenemedi: " + error.message); return; }
     tasks.unshift(data);
-
-    // tarih seçimini ve paneli sıfırla
-    clearDates();
-    cal.hidden = true; calToggle.classList.remove("on");
+    clearDates(); cal.hidden = true; calToggle.classList.remove("on");
     render();
   }
-
   async function toggle(id) {
-    const t = tasks.find(t => t.id === id);
-    if (!t) return;
-    const newDone = !t.done;
-    t.done = newDone; render();
+    const t = tasks.find(t => t.id === id); if (!t) return;
+    const newDone = !t.done; t.done = newDone; render();
     const { error } = await db.from("tasks").update({ done: newDone }).eq("id", id);
     if (error) { console.error(error); t.done = !newDone; render(); }
   }
-
   async function remove(id) {
-    const prev = tasks;
-    tasks = tasks.filter(t => t.id !== id); render();
+    const prev = tasks; tasks = tasks.filter(t => t.id !== id); render();
     const { error } = await db.from("tasks").delete().eq("id", id);
     if (error) { console.error(error); tasks = prev; render(); }
   }
 
-  // --- Olaylar ---
   addBtn.addEventListener("click", add);
   input.addEventListener("keydown", e => { if (e.key === "Enter") add(); });
-
   calToggle.addEventListener("click", () => {
-    cal.hidden = !cal.hidden;
-    calToggle.classList.toggle("on", !cal.hidden);
-    if (!cal.hidden) renderCal();
+    cal.hidden = !cal.hidden; calToggle.classList.toggle("on", !cal.hidden); if (!cal.hidden) renderCal();
   });
-  document.getElementById("cal-prev").addEventListener("click", () => {
-    viewMonth--; if (viewMonth < 0) { viewMonth = 11; viewYear--; } renderCal();
-  });
-  document.getElementById("cal-next").addEventListener("click", () => {
-    viewMonth++; if (viewMonth > 11) { viewMonth = 0; viewYear++; } renderCal();
-  });
+  document.getElementById("cal-prev").addEventListener("click", () => { viewMonth--; if (viewMonth < 0) { viewMonth = 11; viewYear--; } renderCal(); });
+  document.getElementById("cal-next").addEventListener("click", () => { viewMonth++; if (viewMonth > 11) { viewMonth = 0; viewYear++; } renderCal(); });
   startTime.addEventListener("input", updateSummary);
   endTime.addEventListener("input", updateSummary);
   document.getElementById("cal-clear").addEventListener("click", clearDates);
-  document.getElementById("cal-done").addEventListener("click", () => {
-    cal.hidden = true; calToggle.classList.remove("on");
-  });
-
+  document.getElementById("cal-done").addEventListener("click", () => { cal.hidden = true; calToggle.classList.remove("on"); });
   clearBtn.addEventListener("click", async () => {
     const doneIds = tasks.filter(t => t.done).map(t => t.id);
     if (doneIds.length === 0) return;
-    const prev = tasks;
-    tasks = tasks.filter(t => !t.done); render();
+    const prev = tasks; tasks = tasks.filter(t => !t.done); render();
     const { error } = await db.from("tasks").delete().in("id", doneIds);
     if (error) { console.error(error); tasks = prev; render(); }
   });
-
-  filters.forEach(btn => {
-    btn.addEventListener("click", () => {
-      filters.forEach(b => b.classList.remove("active"));
-      btn.classList.add("active");
-      filter = btn.dataset.filter;
-      render();
-    });
-  });
-
+  filters.forEach(btn => btn.addEventListener("click", () => {
+    filters.forEach(b => b.classList.remove("active")); btn.classList.add("active");
+    filter = btn.dataset.filter; render();
+  }));
   sortSel.addEventListener("change", () => { sortMode = sortSel.value; render(); });
 
-  load();
+  // ===================== BAŞLAT =====================
+  const { data: { session } } = await db.auth.getSession();
+  if (session?.user) showApp(session.user); else showAuth();
 </script>
 </body>
 </html>
