@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Yapılacaklar · To-Do</title>
+<style>
+  :root {
+    /* Color Series paleti — düz renk blokları */
+    --ink:    #0A0A0A;
+    --cream:  #EEEBE3;
+    --peach:  #FFE4C4;
+    --orange: #EB7223;
+    --lilac:  #E0CEE3;
+    --lime:   #D1EC3F;
+    --white:  #ffffff;
+    --muted:  #6b655b;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    min-height: 100vh;
+    font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+    color: var(--ink);
+    background: var(--cream);
+    display: flex;
+    justify-content: center;
+    padding: 56px 20px;
+  }
+
+  .app { width: 100%; max-width: 560px; }
+
+  /* Başlık */
+  header h1 { font-size: 2.6rem; font-weight: 800; letter-spacing: -1px; line-height: 1.05; }
+  header p  { margin-top: 8px; color: var(--muted); font-size: .95rem; }
+
+  /* Giriş alanı */
+  .add-row { display: flex; gap: 10px; margin: 28px 0 12px; }
+  #task-input {
+    flex: 1; padding: 15px 16px;
+    border: 2px solid var(--ink); background: var(--white);
+    color: var(--ink); font-size: 1rem; outline: none;
+  }
+  #task-input::placeholder { color: #9a948a; }
+  #task-input:focus { background: var(--peach); }
+
+  #add-btn {
+    padding: 0 26px; border: 2px solid var(--ink);
+    background: var(--lime); color: var(--ink);
+    font-weight: 800; font-size: 1rem; cursor: pointer;
+  }
+  #add-btn:hover { background: var(--orange); }
+
+  /* Tarih çubuğu */
+  .date-bar { display: flex; gap: 10px; align-items: center; margin-bottom: 12px; flex-wrap: wrap; }
+  #cal-toggle {
+    padding: 9px 14px; border: 2px solid var(--ink); background: var(--white);
+    color: var(--ink); font-weight: 600; font-size: .9rem; cursor: pointer;
+    line-height: 1.4;
+  }
+  #cal-toggle:hover { background: var(--peach); }
+  #cal-toggle.on { background: var(--lilac); }
+  .date-summary {
+    display: inline-flex; align-items: center;
+    padding: 9px 14px; border: 2px solid var(--ink);
+    background: var(--white); color: var(--ink);
+    font-size: .9rem; font-weight: 600; line-height: 1.4;
+  }
+  .date-summary.no-date { color: var(--muted); font-weight: 400; background: var(--cream); }
+
+  /* Takvim paneli */
+  .cal { border: 2px solid var(--ink); background: var(--white); padding: 16px; margin-bottom: 20px; }
+  .cal[hidden] { display: none; }
+  .cal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+  .cal-title { font-weight: 800; font-size: 1.05rem; text-transform: capitalize; }
+  .cal-nav { display: flex; gap: 8px; }
+  .cal-nav button {
+    width: 34px; height: 34px; border: 2px solid var(--ink);
+    background: var(--white); cursor: pointer; font-size: 1rem; line-height: 1;
+  }
+  .cal-nav button:hover { background: var(--peach); }
+
+  .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+  .dow { text-align: center; font-size: .72rem; font-weight: 700; color: var(--muted); padding: 4px 0; }
+  .day {
+    aspect-ratio: 1 / 1; display: flex; align-items: center; justify-content: center;
+    border: 1px solid transparent; background: var(--cream); cursor: pointer;
+    font-size: .9rem; user-select: none;
+  }
+  .day.blank { background: transparent; cursor: default; }
+  .day:not(.blank):hover { border-color: var(--ink); }
+  .day.today { font-weight: 800; outline: 2px solid var(--lilac); outline-offset: -2px; }
+  .day.in-range { background: var(--peach); }
+  .day.edge { background: var(--orange); color: var(--ink); font-weight: 800; border-color: var(--ink); }
+
+  /* Saatler + aksiyonlar */
+  .times { display: flex; gap: 14px; margin-top: 16px; flex-wrap: wrap; }
+  .time-field { display: flex; flex-direction: column; gap: 4px; font-size: .8rem; color: var(--muted); }
+  .time-field input {
+    border: 2px solid var(--ink); background: var(--white); padding: 8px 10px;
+    font-size: .95rem; color: var(--ink); outline: none;
+  }
+  .time-field input:focus { background: var(--peach); }
+  .cal-actions { display: flex; gap: 10px; margin-top: 16px; }
+  .cal-actions button {
+    padding: 9px 16px; border: 2px solid var(--ink); cursor: pointer;
+    font-weight: 700; font-size: .88rem;
+  }
+  #cal-clear { background: var(--white); color: var(--ink); }
+  #cal-clear:hover { background: var(--lilac); }
+  #cal-done  { background: var(--lime); color: var(--ink); }
+  #cal-done:hover { background: var(--orange); }
+
+  /* Araç çubuğu: filtreler + sıralama */
+  .toolbar { display: flex; gap: 10px; align-items: center; justify-content: space-between; margin-bottom: 22px; flex-wrap: wrap; }
+  .filters { display: flex; gap: 10px; }
+  .filter {
+    padding: 8px 16px; border: 2px solid var(--ink); background: var(--white);
+    color: var(--ink); font-size: .85rem; font-weight: 600; cursor: pointer;
+  }
+  .filter:hover { background: var(--peach); }
+  .filter.active { background: var(--lilac); }
+
+  .sort-wrap { display: flex; align-items: center; gap: 8px; font-size: .82rem; color: var(--muted); }
+  #sort {
+    border: 2px solid var(--ink); background: var(--white); color: var(--ink);
+    padding: 8px 10px; font-size: .85rem; font-weight: 600; cursor: pointer;
+  }
+
+  /* Liste */
+  ul#list { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+  .item { display: flex; align-items: flex-start; gap: 14px; padding: 16px; background: var(--white); border: 2px solid var(--ink); }
+
+  .check {
+    appearance: none; width: 24px; height: 24px; flex-shrink: 0; margin-top: 1px;
+    border: 2px solid var(--ink); background: var(--white); cursor: pointer; position: relative;
+  }
+  .check:hover { background: var(--peach); }
+  .check:checked { background: var(--lime); }
+  .check:checked::after {
+    content: ""; position: absolute; left: 7px; top: 2px;
+    width: 6px; height: 12px; border: solid var(--ink); border-width: 0 3px 3px 0; transform: rotate(45deg);
+  }
+
+  .body { flex: 1; min-width: 0; }
+  .text { font-size: 1.02rem; word-break: break-word; }
+  .meta {
+    display: inline-flex; align-items: center; gap: 6px; margin-top: 6px;
+    font-size: .78rem; font-weight: 600; color: var(--ink);
+    background: var(--peach); border: 1px solid var(--ink); padding: 3px 8px;
+  }
+  .item.done { background: var(--cream); }
+  .item.done .text { color: #9a948a; text-decoration: line-through; }
+
+  .del {
+    width: 30px; height: 30px; flex-shrink: 0; border: 2px solid var(--ink);
+    background: var(--white); color: var(--ink); font-size: 1.1rem; line-height: 1; cursor: pointer;
+  }
+  .del:hover { background: var(--orange); color: var(--white); }
+
+  /* Alt bilgi */
+  .footer { margin-top: 22px; display: flex; justify-content: space-between; align-items: center; font-size: .85rem; color: var(--muted); }
+  #clear-done {
+    border: 2px solid var(--ink); background: var(--white); color: var(--ink);
+    cursor: pointer; font-size: .85rem; font-weight: 600; padding: 8px 14px;
+  }
+  #clear-done:hover { background: var(--lilac); }
+
+  .empty {
+    text-align: center; color: var(--muted); padding: 44px 0; font-size: .95rem;
+    background: var(--white); border: 2px dashed var(--ink);
+  }
+  .empty span { font-size: 2rem; display: block; margin-bottom: 8px; }
+</style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <h1>Yapılacaklar</h1>
+      <p>Sade ve ferah. Bugün ne yapıyoruz?</p>
+    </header>
+
+    <div class="add-row">
+      <input id="task-input" type="text" placeholder="Yeni bir görev ekle…" maxlength="200" />
+      <button id="add-btn">Ekle</button>
+    </div>
+
+    <div class="date-bar">
+      <button id="cal-toggle" type="button">📅 Tarih ekle</button>
+      <span id="date-summary" class="date-summary no-date">Tarih seçilmedi</span>
+    </div>
+
+    <div id="cal" class="cal" hidden>
+      <div class="cal-head">
+        <div class="cal-title" id="cal-title">—</div>
+        <div class="cal-nav">
+          <button type="button" id="cal-prev" title="Önceki ay">‹</button>
+          <button type="button" id="cal-next" title="Sonraki ay">›</button>
+        </div>
+      </div>
+      <div class="cal-grid" id="cal-grid"></div>
+
+      <div class="times">
+        <label class="time-field">Başlangıç saati
+          <input type="time" id="start-time" />
+        </label>
+        <label class="time-field">Bitiş saati
+          <input type="time" id="end-time" />
+        </label>
+      </div>
+
+      <div class="cal-actions">
+        <button type="button" id="cal-clear">Temizle</button>
+        <button type="button" id="cal-done">Tamam</button>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <div class="filters">
+        <button class="filter active" data-filter="all">Tümü</button>
+        <button class="filter" data-filter="active">Aktif</button>
+        <button class="filter" data-filter="done">Bitti</button>
+      </div>
+      <div class="sort-wrap">
+        <label for="sort">Sırala:</label>
+        <select id="sort">
+          <option value="created">Eklenme tarihi</option>
+          <option value="alpha">A → Z</option>
+          <option value="start">Başlangıç tarihi</option>
+        </select>
+      </div>
+    </div>
+
+    <ul id="list"></ul>
+
+    <div class="footer">
+      <span id="count">0 görev</span>
+      <button id="clear-done">Bitenleri temizle</button>
+    </div>
+  </div>
+
+<script type="module">
+  import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+  const SUPABASE_URL = "https://ydlfzanzjnhnrpotoyqx.supabase.co";
+  const SUPABASE_KEY = "sb_publishable_Y9UsjOku_ho3kOO9HhOnDw_TcrRd7lW";
+  const db = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  // --- DOM ---
+  const input    = document.getElementById("task-input");
+  const addBtn   = document.getElementById("add-btn");
+  const list     = document.getElementById("list");
+  const count    = document.getElementById("count");
+  const clearBtn = document.getElementById("clear-done");
+  const filters  = document.querySelectorAll(".filter");
+  const sortSel  = document.getElementById("sort");
+
+  const calToggle = document.getElementById("cal-toggle");
+  const cal       = document.getElementById("cal");
+  const calTitle  = document.getElementById("cal-title");
+  const calGrid   = document.getElementById("cal-grid");
+  const dateSummary = document.getElementById("date-summary");
+  const startTime = document.getElementById("start-time");
+  const endTime   = document.getElementById("end-time");
+
+  // --- Durum ---
+  let tasks  = [];
+  let filter = "all";
+  let sortMode = "created";
+
+  const today = new Date(); today.setHours(0,0,0,0);
+  let viewYear  = today.getFullYear();
+  let viewMonth = today.getMonth();
+  let selStart = null;   // sadece tarih (Date)
+  let selEnd   = null;
+
+  // --- Yardımcılar ---
+  const dayKey = d => d.getFullYear() + "-" + d.getMonth() + "-" + d.getDate();
+  const sameDay = (a, b) => a && b && dayKey(a) === dayKey(b);
+
+  const fmtD = d => new Intl.DateTimeFormat("tr-TR", { day: "numeric", month: "short" }).format(d);
+  const fmtT = d => new Intl.DateTimeFormat("tr-TR", { hour: "2-digit", minute: "2-digit" }).format(d);
+  const hasTime = d => d.getHours() !== 0 || d.getMinutes() !== 0;
+  const part = d => fmtD(d) + (hasTime(d) ? " " + fmtT(d) : "");
+
+  function fmtRange(sIso, eIso) {
+    const s = sIso ? new Date(sIso) : null;
+    const e = eIso ? new Date(eIso) : null;
+    if (!s && !e) return "";
+    if (s && e) {
+      if (sameDay(s, e)) {
+        const t = (hasTime(s) || hasTime(e)) ? ` ${fmtT(s)} – ${fmtT(e)}` : "";
+        return fmtD(s) + t;
+      }
+      return part(s) + " → " + part(e);
+    }
+    return part(s || e);
+  }
+
+  function combine(dateOnly, timeStr) {
+    let h = 0, m = 0;
+    if (timeStr) { const p = timeStr.split(":"); h = +p[0] || 0; m = +p[1] || 0; }
+    return new Date(dateOnly.getFullYear(), dateOnly.getMonth(), dateOnly.getDate(), h, m).toISOString();
+  }
+
+  // --- Takvim ---
+  function renderCal() {
+    calTitle.textContent = new Intl.DateTimeFormat("tr-TR", { month: "long", year: "numeric" })
+      .format(new Date(viewYear, viewMonth, 1));
+
+    calGrid.innerHTML = "";
+    ["Pzt","Sal","Çar","Per","Cum","Cmt","Paz"].forEach(d => {
+      const el = document.createElement("div");
+      el.className = "dow"; el.textContent = d;
+      calGrid.appendChild(el);
+    });
+
+    const first = new Date(viewYear, viewMonth, 1);
+    const lead = (first.getDay() + 6) % 7;            // Pazartesi = 0
+    const days = new Date(viewYear, viewMonth + 1, 0).getDate();
+
+    for (let i = 0; i < lead; i++) {
+      const b = document.createElement("div");
+      b.className = "day blank";
+      calGrid.appendChild(b);
+    }
+
+    for (let d = 1; d <= days; d++) {
+      const cur = new Date(viewYear, viewMonth, d);
+      const el = document.createElement("div");
+      el.className = "day";
+      el.textContent = d;
+      if (sameDay(cur, today)) el.classList.add("today");
+
+      const isEdge = sameDay(cur, selStart) || sameDay(cur, selEnd);
+      const inRange = selStart && selEnd && cur > selStart && cur < selEnd;
+      if (isEdge) el.classList.add("edge");
+      else if (inRange) el.classList.add("in-range");
+
+      el.addEventListener("click", () => pickDay(cur));
+      calGrid.appendChild(el);
+    }
+  }
+
+  function pickDay(day) {
+    if (!selStart || (selStart && selEnd)) {
+      selStart = day; selEnd = null;
+    } else {
+      if (day.getTime() < selStart.getTime()) selStart = day;
+      else if (day.getTime() === selStart.getTime()) { /* aynı gün: tek gün kalır */ }
+      else selEnd = day;
+    }
+    renderCal();
+    updateSummary();
+  }
+
+  function updateSummary() {
+    if (!selStart) {
+      dateSummary.textContent = "Tarih seçilmedi";
+      dateSummary.classList.add("no-date");
+      return;
+    }
+    dateSummary.classList.remove("no-date");
+    const sTxt = fmtD(selStart) + (startTime.value ? " " + startTime.value : "");
+    if (selEnd) {
+      const eTxt = fmtD(selEnd) + (endTime.value ? " " + endTime.value : "");
+      dateSummary.textContent = sTxt + "  →  " + eTxt;
+    } else {
+      const eT = endTime.value ? "  →  " + fmtD(selStart) + " " + endTime.value : "";
+      dateSummary.textContent = sTxt + eT;
+    }
+  }
+
+  function clearDates() {
+    selStart = null; selEnd = null;
+    startTime.value = ""; endTime.value = "";
+    renderCal(); updateSummary();
+  }
+
+  // --- Veri ---
+  async function load() {
+    const { data, error } = await db.from("tasks").select("*");
+    if (error) { console.error(error); alert("Veriler yüklenemedi: " + error.message); return; }
+    tasks = data;
+    render();
+  }
+
+  function sortTasks(arr) {
+    const a = [...arr];
+    if (sortMode === "created") {
+      a.sort((x, y) => new Date(y.inserted_at) - new Date(x.inserted_at));
+    } else if (sortMode === "alpha") {
+      a.sort((x, y) => x.text.localeCompare(y.text, "tr", { sensitivity: "base" }));
+    } else if (sortMode === "start") {
+      a.sort((x, y) => {
+        if (!x.start_at && !y.start_at) return 0;
+        if (!x.start_at) return 1;
+        if (!y.start_at) return -1;
+        return new Date(x.start_at) - new Date(y.start_at);
+      });
+    }
+    return a;
+  }
+
+  function render() {
+    list.innerHTML = "";
+
+    let shown = tasks.filter(t =>
+      filter === "all" ? true : filter === "active" ? !t.done : t.done
+    );
+    shown = sortTasks(shown);
+
+    if (shown.length === 0) {
+      list.innerHTML = `<li class="empty"><span>📋</span>${
+        tasks.length === 0 ? "Henüz görev yok. İlkini ekle!" : "Bu filtrede görev yok."
+      }</li>`;
+    }
+
+    shown.forEach(task => {
+      const li = document.createElement("li");
+      li.className = "item" + (task.done ? " done" : "");
+
+      const cb = document.createElement("input");
+      cb.type = "checkbox"; cb.className = "check"; cb.checked = task.done;
+      cb.addEventListener("change", () => toggle(task.id));
+
+      const body = document.createElement("div");
+      body.className = "body";
+      const span = document.createElement("div");
+      span.className = "text";
+      span.textContent = task.text;
+      body.appendChild(span);
+
+      const range = fmtRange(task.start_at, task.end_at);
+      if (range) {
+        const meta = document.createElement("span");
+        meta.className = "meta";
+        meta.textContent = "📅 " + range;
+        body.appendChild(meta);
+      }
+
+      const del = document.createElement("button");
+      del.className = "del"; del.innerHTML = "&times;"; del.title = "Sil";
+      del.addEventListener("click", () => remove(task.id));
+
+      li.append(cb, body, del);
+      list.appendChild(li);
+    });
+
+    const left = tasks.filter(t => !t.done).length;
+    count.textContent = `${left} görev kaldı · ${tasks.length} toplam`;
+  }
+
+  async function add() {
+    const text = input.value.trim();
+    if (!text) { input.focus(); return; }
+
+    let start_at = null, end_at = null;
+    if (selStart) {
+      start_at = combine(selStart, startTime.value);
+      const endDay = selEnd || (endTime.value ? selStart : null);
+      if (endDay) end_at = combine(endDay, endTime.value);
+    }
+
+    const row = { text };
+    if (start_at) row.start_at = start_at;
+    if (end_at)   row.end_at = end_at;
+
+    input.value = "";
+    const { data, error } = await db.from("tasks").insert(row).select().single();
+    if (error) { console.error(error); alert("Eklenemedi: " + error.message); return; }
+    tasks.unshift(data);
+
+    // tarih seçimini ve paneli sıfırla
+    clearDates();
+    cal.hidden = true; calToggle.classList.remove("on");
+    render();
+  }
+
+  async function toggle(id) {
+    const t = tasks.find(t => t.id === id);
+    if (!t) return;
+    const newDone = !t.done;
+    t.done = newDone; render();
+    const { error } = await db.from("tasks").update({ done: newDone }).eq("id", id);
+    if (error) { console.error(error); t.done = !newDone; render(); }
+  }
+
+  async function remove(id) {
+    const prev = tasks;
+    tasks = tasks.filter(t => t.id !== id); render();
+    const { error } = await db.from("tasks").delete().eq("id", id);
+    if (error) { console.error(error); tasks = prev; render(); }
+  }
+
+  // --- Olaylar ---
+  addBtn.addEventListener("click", add);
+  input.addEventListener("keydown", e => { if (e.key === "Enter") add(); });
+
+  calToggle.addEventListener("click", () => {
+    cal.hidden = !cal.hidden;
+    calToggle.classList.toggle("on", !cal.hidden);
+    if (!cal.hidden) renderCal();
+  });
+  document.getElementById("cal-prev").addEventListener("click", () => {
+    viewMonth--; if (viewMonth < 0) { viewMonth = 11; viewYear--; } renderCal();
+  });
+  document.getElementById("cal-next").addEventListener("click", () => {
+    viewMonth++; if (viewMonth > 11) { viewMonth = 0; viewYear++; } renderCal();
+  });
+  startTime.addEventListener("input", updateSummary);
+  endTime.addEventListener("input", updateSummary);
+  document.getElementById("cal-clear").addEventListener("click", clearDates);
+  document.getElementById("cal-done").addEventListener("click", () => {
+    cal.hidden = true; calToggle.classList.remove("on");
+  });
+
+  clearBtn.addEventListener("click", async () => {
+    const doneIds = tasks.filter(t => t.done).map(t => t.id);
+    if (doneIds.length === 0) return;
+    const prev = tasks;
+    tasks = tasks.filter(t => !t.done); render();
+    const { error } = await db.from("tasks").delete().in("id", doneIds);
+    if (error) { console.error(error); tasks = prev; render(); }
+  });
+
+  filters.forEach(btn => {
+    btn.addEventListener("click", () => {
+      filters.forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      filter = btn.dataset.filter;
+      render();
+    });
+  });
+
+  sortSel.addEventListener("change", () => { sortMode = sortSel.value; render(); });
+
+  load();
+</script>
+</body>
+</html>

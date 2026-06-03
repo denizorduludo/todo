@@ -1,0 +1,8 @@
+# Supabase gizli bilgileri — ASLA gönderme
+.supabase-credentials.txt
+
+# macOS
+.DS_Store
+
+# Yerel önizleme/geliştirme yapılandırması
+.claude/
