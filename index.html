@@ -64,7 +64,6 @@
   }
   .link-btn:hover { color: var(--ink); }
   .otp-info { font-size: .88rem; color: var(--ink); line-height: 1.5; }
-  #otp-code { letter-spacing: 6px; text-align: center; font-size: 1.2rem; font-weight: 700; }
 
   .auth-msg { margin-top: 14px; font-size: .88rem; min-height: 1em; }
   .auth-msg.error { color: var(--orange); font-weight: 700; }
@@ -221,16 +220,14 @@
         <button id="cred-submit" class="primary" type="submit">Giriş yap</button>
       </form>
 
-      <form id="otp-form" class="auth-form" hidden>
+      <div id="sent-view" class="auth-form" hidden>
         <p class="otp-info">
-          <strong id="otp-email"></strong> adresine doğrulama gönderildi.<br>
-          E-postadaki kodu aşağıya gir ya da e-postadaki bağlantıya tıkla.
+          <strong id="otp-email"></strong> adresine bir <strong>doğrulama bağlantısı</strong> gönderildi.<br>
+          Gelen kutundaki bağlantıya tıkla — hesabın doğrulanınca otomatik giriş yapılır.
         </p>
-        <input id="otp-code" inputmode="numeric" autocomplete="one-time-code" placeholder="Doğrulama kodu" />
-        <button id="otp-submit" class="primary" type="submit">Doğrula ve giriş yap</button>
-        <button id="otp-resend" class="link-btn" type="button">Tekrar gönder</button>
-        <button id="otp-back" class="link-btn" type="button">← Geri dön</button>
-      </form>
+        <button id="otp-resend" class="link-btn" type="button">Bağlantıyı tekrar gönder</button>
+        <button id="otp-back" class="link-btn" type="button">← Giriş ekranına dön</button>
+      </div>
 
       <div id="auth-msg" class="auth-msg"></div>
     </div>
@@ -306,7 +303,9 @@
 
   const SUPABASE_URL = "https://ydlfzanzjnhnrpotoyqx.supabase.co";
   const SUPABASE_KEY = "sb_publishable_Y9UsjOku_ho3kOO9HhOnDw_TcrRd7lW";
-  const db = createClient(SUPABASE_URL, SUPABASE_KEY);
+  const db = createClient(SUPABASE_URL, SUPABASE_KEY, {
+    auth: { flowType: "implicit", detectSessionInUrl: true, persistSession: true, autoRefreshToken: true }
+  });
 
   // ===================== AUTH =====================
   const authView  = document.getElementById("auth-view");
@@ -316,8 +315,7 @@
   const emailEl   = document.getElementById("email");
   const pwEl      = document.getElementById("password");
   const credSubmit= document.getElementById("cred-submit");
-  const otpForm   = document.getElementById("otp-form");
-  const otpCode   = document.getElementById("otp-code");
+  const sentView  = document.getElementById("sent-view");
   const otpEmail  = document.getElementById("otp-email");
   const authMsg   = document.getElementById("auth-msg");
   const userEmail = document.getElementById("user-email");
@@ -347,16 +345,15 @@
   function setMode(m) {
     mode = m;
     authTabs.forEach(t => t.classList.toggle("active", t.dataset.mode === m));
-    credForm.hidden = false; otpForm.hidden = true;
+    credForm.hidden = false; sentView.hidden = true;
     credSubmit.textContent = m === "login" ? "Giriş yap" : "Kayıt ol";
     pwEl.autocomplete = m === "login" ? "current-password" : "new-password";
     msg("");
   }
-  function showOtp(email) {
+  function showSent(email) {
     pendingEmail = email;
     otpEmail.textContent = email;
-    credForm.hidden = true; otpForm.hidden = false;
-    otpCode.value = ""; otpCode.focus();
+    credForm.hidden = true; sentView.hidden = false;
   }
 
   authTabs.forEach(t => t.addEventListener("click", () => setMode(t.dataset.mode)));
@@ -375,27 +372,16 @@
         });
         if (error) return msg(tr(error.message), true);
         if (data.session) return;             // onay kapalıysa direkt giriş
-        showOtp(email);
-        msg("Doğrulama gönderildi. E-postanı kontrol et.", false);
+        showSent(email);
+        msg("Doğrulama bağlantısı gönderildi. E-postanı kontrol et.", false);
       }
     } finally { credSubmit.disabled = false; }
-  });
-
-  otpForm.addEventListener("submit", async e => {
-    e.preventDefault();
-    const token = otpCode.value.trim();
-    if (!token) return;
-    msg("");
-    let r = await db.auth.verifyOtp({ email: pendingEmail, token, type: "signup" });
-    if (r.error) r = await db.auth.verifyOtp({ email: pendingEmail, token, type: "email" });
-    if (r.error) return msg(tr(r.error.message), true);
-    // başarı → onAuthStateChange uygulamayı açar
   });
 
   document.getElementById("otp-resend").addEventListener("click", async () => {
     msg("Tekrar gönderiliyor…");
     const { error } = await db.auth.resend({ type: "signup", email: pendingEmail, options: { emailRedirectTo: redirectTo } });
-    msg(error ? tr(error.message) : "Yeni doğrulama gönderildi.", !!error);
+    msg(error ? tr(error.message) : "Yeni doğrulama bağlantısı gönderildi.", !!error);
   });
   document.getElementById("otp-back").addEventListener("click", () => setMode(mode));
 
